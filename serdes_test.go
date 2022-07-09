@@ -21,6 +21,7 @@ import (
 	"gendb"
 	"gendb/internal/sql_test"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"testing"
 )
 
@@ -28,7 +29,7 @@ func TestNullable(t *testing.T) {
 	db := sql_test.SetupDB(t)
 
 	// Insert a student with a null IdCode
-	sql_test.AddStudentToDB(t, db, sql_test.NullIdCode, "bobby tables ", "CS")
+	require.True(t, sql_test.AddStudentToDB(db, sql_test.NullIdCode, "bobby tables ", "CS").Ok())
 
 	type args struct {
 		query     string

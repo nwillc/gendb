@@ -1,0 +1,10 @@
+output: "README.md"
+embed: "."
+includeUnexported: "false"
+header: |+
+  # gendb
+  Go SQL database utilities leveraging generics.
+repository:
+  url: https://github.com/nwillc/genfuncs
+  defaultBranch: master
+  path: /

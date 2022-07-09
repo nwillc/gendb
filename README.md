@@ -29,6 +29,35 @@ func Exec(db *sql.DB, query string, args ...any) *genfuncs.Result[sql.Result]
 
 Exec calls ExecContext with the default background context\.
 
+<details><summary>Example</summary>
+<p>
+
+```go
+package main
+
+import (
+	"fmt"
+	"gendb"
+	"gendb/internal/sql_test"
+)
+
+func main() {
+	db := sql_test.CreateDB()
+	exec := gendb.Exec(db.OrEmpty(), "UPDATE student set program = ? WHERE code = '0001'", "CS")
+	count, _ := exec.OrEmpty().RowsAffected()
+	fmt.Println("Updated:", count)
+}
+```
+
+#### Output
+
+```
+Updated: 1
+```
+
+</p>
+</details>
+
 ## func [ExecContext](<https://github.com/nwillc/genfuncs/blob/master/gendb.go#L38-L43>)
 
 ```go

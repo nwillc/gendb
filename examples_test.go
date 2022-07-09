@@ -15,36 +15,25 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package sql_test
+package gendb_test
 
 import (
-	"database/sql"
 	"fmt"
 	"gendb"
-	"github.com/nwillc/genfuncs"
+	"gendb/internal/sql_test"
+	"testing"
 )
 
-var (
-	_ fmt.Stringer = (*Student)(nil)
-
-	StudentBasicBinder = func(s *Student) []any { return []any{&s.Id, &s.Code, &s.Name, &s.Program} }
-)
-
-type Student struct {
-	Id      int
-	Code    IdCode
-	Name    string
-	Program string
+func TestFunctionExamples(t *testing.T) {
+	// sql_test.MaybeRunExamples(t)
+	ExampleExec()
 }
 
-func (s Student) String() string {
-	return fmt.Sprintf("Student: {id: %d, code: %s, name: %s, program: %s}",
-		s.Id, s.Code, s.Name, s.Program)
-}
-
-func AddStudentToDB(db *sql.DB, code IdCode, name string, program string) *genfuncs.Result[sql.Result] {
-	return gendb.Exec(
-		db,
-		"INSERT INTO student(code, name, program) VALUES (?, ?, ?)",
-		code, name, program)
+func ExampleExec() {
+	db := sql_test.CreateDB()
+	exec := gendb.Exec(db.OrEmpty(), "UPDATE student set program = ? WHERE code = '0001'", "CS")
+	count, _ := exec.OrEmpty().RowsAffected()
+	fmt.Println("Updated:", count)
+	// Output:
+	// Updated: 1
 }
