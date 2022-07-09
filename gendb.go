@@ -8,6 +8,7 @@ import (
 	"github.com/nwillc/genfuncs/results"
 )
 
+// Exec calls ExecContext with the default background context.
 func Exec(
 	db *sql.DB,
 	query string,
@@ -16,6 +17,7 @@ func Exec(
 	return ExecContext(db, context.Background(), query, args...)
 }
 
+// ExecContext executes a query with arguments and returns a sql.Result summarizing the effect of the statement.
 func ExecContext(
 	db *sql.DB,
 	ctx context.Context,
@@ -32,6 +34,7 @@ func ExecContext(
 		})
 }
 
+// Query calls QueryContext with the default background context.
 func Query[T any](
 	db *sql.DB,
 	binder func(*T) []any,
@@ -41,6 +44,7 @@ func Query[T any](
 	return QueryContext[T](db, context.Background(), binder, query, args...)
 }
 
+// QueryContext  performs a query with arguments using a binder to assign the rows returned to a slice of results.
 func QueryContext[T any](
 	db *sql.DB,
 	ctx context.Context,
@@ -68,6 +72,7 @@ func QueryContext[T any](
 		})
 }
 
+// QueryRow calls QueryRowContext with the default Background context.
 func QueryRow[T any](
 	db *sql.DB,
 	binder func(*T) []any,
@@ -77,6 +82,8 @@ func QueryRow[T any](
 	return QueryRowContext[T](db, context.Background(), binder, query, args...)
 }
 
+// QueryRowContext performs a query with arguments using a binder to assign the first row returned to a single result.
+// If multiple rows are returned the first one is used. If no rows are returned the error sql.ErrNoRows is returned.
 func QueryRowContext[T any](
 	db *sql.DB,
 	ctx context.Context,
@@ -103,6 +110,7 @@ func QueryRowContext[T any](
 		})
 }
 
+// SingleBinder is a binder for base types.
 func SingleBinder[T any](t *T) []any {
 	return []any{t}
 }
