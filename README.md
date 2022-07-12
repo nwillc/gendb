@@ -106,8 +106,8 @@ func main() {
 #### Output
 
 ```
-fred masters}
-barney PHD}
+fred masters
+barney PHD
 ```
 
 </p>

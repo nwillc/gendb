@@ -54,6 +54,6 @@ func ExampleQuery() {
 		fmt.Println(student.name, student.program)
 	}
 	// Output:
-	// fred masters}
-	// barney PHD}
+	// fred masters
+	// barney PHD
 }
