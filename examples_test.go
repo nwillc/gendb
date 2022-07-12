@@ -28,6 +28,7 @@ func TestFunctionExamples(t *testing.T) {
 	// sql_test.MaybeRunExamples(t)
 	ExampleExec()
 	ExampleQuery()
+	ExampleQueryRow()
 }
 
 func ExampleExec() {
@@ -56,4 +57,15 @@ func ExampleQuery() {
 	// Output:
 	// fred masters
 	// barney PHD
+}
+
+func ExampleQueryRow() {
+	db := sql_test.CreateDB()
+	results := gendb.QueryRow[int](
+		db.OrEmpty(),
+		gendb.SingleBinder[int],
+		"SELECT count(*) FROM student")
+	fmt.Println("Count:", results.OrEmpty())
+	// Output:
+	// Count: 2
 }

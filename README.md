@@ -129,6 +129,37 @@ func QueryRow[T any](db *sql.DB, binder func(*T) []any, query string, args ...an
 
 QueryRow calls QueryRowContext with the default Background context.
 
+<details><summary>Example</summary>
+<p>
+
+```go
+package main
+
+import (
+	"fmt"
+	"gendb"
+	"gendb/internal/sql_test"
+)
+
+func main() {
+	db := sql_test.CreateDB()
+	results := gendb.QueryRow[int](
+		db.OrEmpty(),
+		gendb.SingleBinder[int],
+		"SELECT count(*) FROM student")
+	fmt.Println("Count:", results.OrEmpty())
+}
+```
+
+#### Output
+
+```
+Count: 2
+```
+
+</p>
+</details>
+
 ## func [QueryRowContext](<https://github.com/nwillc/genfuncs/blob/master/gendb.go#L104-L110>)
 
 ```go
