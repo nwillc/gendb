@@ -27,6 +27,7 @@ import (
 func TestFunctionExamples(t *testing.T) {
 	// sql_test.MaybeRunExamples(t)
 	ExampleExec()
+	ExampleQuery()
 }
 
 func ExampleExec() {
@@ -36,4 +37,23 @@ func ExampleExec() {
 	fmt.Println("Updated:", count)
 	// Output:
 	// Updated: 1
+}
+
+func ExampleQuery() {
+	db := sql_test.CreateDB()
+	type studentProgram struct {
+		name    string
+		program string
+	}
+	binder := func(s *studentProgram) []any { return []any{&s.name, &s.program} }
+	results := gendb.Query[studentProgram](
+		db.OrEmpty(),
+		binder,
+		"SELECT name, program FROM student")
+	for _, student := range results.OrEmpty() {
+		fmt.Println(student.name, student.program)
+	}
+	// Output:
+	// fred masters}
+	// barney PHD}
 }

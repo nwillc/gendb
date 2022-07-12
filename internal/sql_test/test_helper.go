@@ -22,7 +22,6 @@ import (
 	"gendb"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/nwillc/genfuncs"
-	"github.com/nwillc/genfuncs/results"
 	"github.com/stretchr/testify/require"
 	"os"
 	"testing"
@@ -48,23 +47,23 @@ func SetupDB(t *testing.T) *sql.DB {
 
 func CreateDB() *genfuncs.Result[*sql.DB] {
 	_ = os.Remove(DBName)
-	return results.Map[*sql.DB, *sql.DB](
-		genfuncs.NewResultError(sql.Open("sqlite3", DBName)),
-		func(db *sql.DB) *genfuncs.Result[*sql.DB] {
-			return results.Map[sql.Result, *sql.DB](
-				gendb.Exec(db, `CREATE TABLE student (
-											"id" integer NOT NULL PRIMARY KEY AUTOINCREMENT,
-											"code" TEXT,
-											"name" TEXT,
-											"program" TEXT
-										);`),
-				func(_ sql.Result) *genfuncs.Result[*sql.DB] { return genfuncs.NewResult(db) },
-			).OnSuccess(func(db *sql.DB) {
-				AddStudentToDB(db, NewIdCode("0001"), "fred", "masters")
-				AddStudentToDB(db, NewIdCode("0002"), "barney", "PHD")
-			})
-		},
-	)
+	return genfuncs.NewResultError[*sql.DB](sql.Open("sqlite3", DBName)).
+		Then(func(db *sql.DB) *genfuncs.Result[*sql.DB] {
+			if r := gendb.Exec(db, `CREATE TABLE student (
+													"id" integer NOT NULL PRIMARY KEY AUTOINCREMENT,
+													"code" TEXT,
+													"name" TEXT,
+													"program" TEXT);`); !r.Ok() {
+				return genfuncs.NewError[*sql.DB](r.Error())
+			}
+			if r := AddStudentToDB(db, NewIdCode("0001"), "fred", "masters"); !r.Ok() {
+				return genfuncs.NewError[*sql.DB](r.Error())
+			}
+			if r := AddStudentToDB(db, NewIdCode("0002"), "barney", "PHD"); !r.Ok() {
+				return genfuncs.NewError[*sql.DB](r.Error())
+			}
+			return genfuncs.NewResult(db)
+		})
 }
 
 func MaybeRunExamples(t *testing.T) {

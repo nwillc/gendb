@@ -4,6 +4,7 @@ includeUnexported: "false"
 header: |+
   # gendb
   Go SQL database utilities leveraging generics.
+package: gendb
 repository:
   url: https://github.com/nwillc/genfuncs
   defaultBranch: master

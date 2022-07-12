@@ -27,7 +27,7 @@ import "gendb"
 func Exec(db *sql.DB, query string, args ...any) *genfuncs.Result[sql.Result]
 ```
 
-Exec calls ExecContext with the default background context\.
+Exec calls ExecContext with the default background context.
 
 <details><summary>Example</summary>
 <p>
@@ -64,7 +64,7 @@ Updated: 1
 func ExecContext(db *sql.DB, ctx context.Context, query string, args ...any) *genfuncs.Result[sql.Result]
 ```
 
-ExecContext executes a query with arguments and returns a sql\.Result summarizing the effect of the statement\.
+ExecContext executes a query with arguments and returns a sql.Result summarizing the effect of the statement.
 
 ## func [Query](<https://github.com/nwillc/genfuncs/blob/master/gendb.go#L55-L60>)
 
@@ -72,7 +72,46 @@ ExecContext executes a query with arguments and returns a sql\.Result summarizin
 func Query[T any](db *sql.DB, binder func(*T) []any, query string, args ...any) *genfuncs.Result[[]T]
 ```
 
-Query calls QueryContext with the default background context\.
+Query calls QueryContext with the default background context.
+
+<details><summary>Example</summary>
+<p>
+
+```go
+package main
+
+import (
+	"fmt"
+	"gendb"
+	"gendb/internal/sql_test"
+)
+
+func main() {
+	db := sql_test.CreateDB()
+	type studentProgram struct {
+		name    string
+		program string
+	}
+	binder := func(s *studentProgram) []any { return []any{&s.name, &s.program} }
+	results := gendb.Query[studentProgram](
+		db.OrEmpty(),
+		binder,
+		"SELECT name, program FROM student")
+	for _, student := range results.OrEmpty() {
+		fmt.Println(student.name, student.program)
+	}
+}
+```
+
+#### Output
+
+```
+fred masters}
+barney PHD}
+```
+
+</p>
+</details>
 
 ## func [QueryContext](<https://github.com/nwillc/genfuncs/blob/master/gendb.go#L65-L71>)
 
@@ -80,7 +119,7 @@ Query calls QueryContext with the default background context\.
 func QueryContext[T any](db *sql.DB, ctx context.Context, binder func(*T) []any, query string, args ...any) *genfuncs.Result[[]T]
 ```
 
-QueryContext  performs a query with arguments using a binder to assign the rows returned to a slice of results\.
+QueryContext  performs a query with arguments using a binder to assign the rows returned to a slice of results.
 
 ## func [QueryRow](<https://github.com/nwillc/genfuncs/blob/master/gendb.go#L93-L98>)
 
@@ -88,7 +127,7 @@ QueryContext  performs a query with arguments using a binder to assign the rows 
 func QueryRow[T any](db *sql.DB, binder func(*T) []any, query string, args ...any) *genfuncs.Result[T]
 ```
 
-QueryRow calls QueryRowContext with the default Background context\.
+QueryRow calls QueryRowContext with the default Background context.
 
 ## func [QueryRowContext](<https://github.com/nwillc/genfuncs/blob/master/gendb.go#L104-L110>)
 
@@ -96,7 +135,7 @@ QueryRow calls QueryRowContext with the default Background context\.
 func QueryRowContext[T any](db *sql.DB, ctx context.Context, binder func(*T) []any, query string, args ...any) *genfuncs.Result[T]
 ```
 
-QueryRowContext performs a query with arguments using a binder to assign the first row returned to a single result\. If multiple rows are returned the first one is used\. If no rows are returned the error sql\.ErrNoRows is returned\.
+QueryRowContext performs a query with arguments using a binder to assign the first row returned to a single result. If multiple rows are returned the first one is used. If no rows are returned the error sql.ErrNoRows is returned.
 
 ## func [SingleBinder](<https://github.com/nwillc/genfuncs/blob/master/gendb.go#L131>)
 
@@ -104,11 +143,11 @@ QueryRowContext performs a query with arguments using a binder to assign the fir
 func SingleBinder[T any](t *T) []any
 ```
 
-SingleBinder is a binder for base types\.
+SingleBinder is a binder for base types.
 
 ## type [Nullable](<https://github.com/nwillc/genfuncs/blob/master/serdes.go#L33-L35>)
 
-Nullable indicates type supports the database nullable concept\.
+Nullable indicates type supports the database nullable concept.
 
 ```go
 type Nullable interface {
@@ -118,7 +157,7 @@ type Nullable interface {
 
 ## type [SerDes](<https://github.com/nwillc/genfuncs/blob/master/serdes.go#L27-L30>)
 
-SerDes combines the interfaces needed to serialize and deserialize custom types to and from database\.
+SerDes combines the interfaces needed to serialize and deserialize custom types to and from database.
 
 ```go
 type SerDes interface {
