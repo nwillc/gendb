@@ -2,6 +2,10 @@
 
 # gendb
 Go SQL database utilities leveraging generics.
+
+## Dependencies
+This uses [genfuncs](https://github.com/nwillc/genfuncs) for some Go generics and functional code.
+
 # gendb
 
 ```go
